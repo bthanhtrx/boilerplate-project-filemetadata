@@ -4,6 +4,8 @@ require('dotenv').config()
 
 var app = express();
 
+const upload = require('./upload');
+
 app.use(cors());
 app.use('/public', express.static(process.cwd() + '/public'));
 
@@ -12,7 +14,17 @@ app.get('/', function (req, res) {
 });
 
 
+app.post('/api/fileanalyse', upload.single('upfile'),(req, res) => {
 
+  console.log(req.file);
+  const fileInfo = req.file;
+
+  res.json({
+    'name': fileInfo.originalname,
+    'type': fileInfo.mimetype,
+    'size': fileInfo.size
+  });
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, function () {
